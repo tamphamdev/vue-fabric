@@ -1,45 +1,69 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div
+    class="hello"
+    style="width: 100vw; height: 100vh; background-color: #fff"
+  >
+    <div id="canvas-container">
+      <canvas ref="can"></canvas>
+    </div>
   </div>
 </template>
 
 <script>
+import { fabric } from "fabric";
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  data() {
+    return {
+      clientWidth: null,
+      clientHeight: null,
+    };
+  },
+  mounted() {
+    this.clientWidth = window.innerWidth;
+    this.clientHeight = window.innerHeight;
+    const ref = this.$refs.can;
+    const canvas = new fabric.Canvas(ref);
+    // canvas.setDimensions(
+    //   {
+    //     width: "100%",
+    //     height: "100%",
+    //   },
+    //   {
+    //     cssOnly: true,
+    //   }
+    // );
+    let canvasSize = {
+      width: 1200,
+      height: 700,
+    };
+    // canvas container dimensions
+    let containerSize = {
+      width: document.getElementById("canvas-container").offsetWidth,
+      height: document.getElementById("canvas-container").offsetHeight,
+    };
+    let scaleRatio = Math.min(
+      containerSize.width / canvasSize.width,
+      containerSize.height / canvasSize.height
+    );
+    canvas.setWidth(containerSize.width);
+    canvas.setHeight(containerSize.height);
+    canvas.setZoom(scaleRatio);
+    const rect = new fabric.Rect({
+      fill: "red",
+      width: 20,
+      height: 20,
+    });
+    rect.set("selectable", true);
+    canvas.add(rect);
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;
@@ -54,5 +78,10 @@ li {
 }
 a {
   color: #42b983;
+}
+
+#canvas-container {
+  height: 100vh !important;
+  width: 100% !important;
 }
 </style>
